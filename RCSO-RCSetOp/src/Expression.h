@@ -9,14 +9,19 @@
 #include <vector>
 #include <queue>
 #include <stack>
+#include <map>
+
+#include <Generics.h>
+
 using namespace std;
 
 // Global variables
 const string LST_OPERATORS[] = {"*","/","+","-","<=",">=","<",">","=","NOT","AND","OR"};
 enum EN_OPERATORS{MULT, DIVIDE, PLUS, DIFF, LEQ, GEQ, LT, GT, EQ, NOT, AND, OR};
+const map<string, string> REV_OPERATORS {{"=","="}, {"<",">"}, {"<=",">="}, {">","<"}, {">=","<="}};
 const int NR_OPERATORS = 12;
 
-/** Remeber: -1: higher precedence, 0: same precedence, 1: lower precedence */
+/** Remember: -1: higher precedence, 0: same precedence, 1: lower precedence */
 const int PRECEDENCES[12][12] = {
 	{ 0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1},
 	{ 0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1},
@@ -89,12 +94,15 @@ public:
 	  * Its objective is to return a vector of all tokens
 	  * that match the regular expression.
 	  */
-	vector<string> tokenize(const string &str, string reg);
+	static vector<string> tokenize(const string &str, string reg);
 
 	/** This method receives a list of tokens for an infix expression
 	  * and transforms it into a postfix expression.
 	  */
 	void computePostfixExpression();
+
+	/** This method displays the expression in postfix mode */
+	void displayPostfix();
 };
 
 

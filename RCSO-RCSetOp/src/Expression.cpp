@@ -127,3 +127,12 @@ void Expression::computePostfixExpression(){
 		}
 	}
 }
+
+/** This method displays the expression in postfix mode */
+void Expression::displayPostfix(){
+	cout << "Postfix Expression: {";
+	for(string s : postfixVtr){
+		cout << " " << s ;
+	}
+	cout << "}" << endl << endl;
+}

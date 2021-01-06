@@ -6,14 +6,65 @@
 //============================================================================
 
 #include <iostream>
+#include <fstream>
+#include <algorithm>
+
+#include <Generics.h>
 #include <Expression.h>
+#include <RCSetOperator.h>
+
 using namespace std;
 
-int main() {
-	string query = "DP.Category = SP.Category   AND DP.Product  = SP.Product    AND  (DP.Units <= SP.Units      AND  \nNOT (DP.Price < SP.Price) OR\nDP.Price >= SP.Price * 0.5) ";
-	Expression exp(query);
-	for(string s : exp.getPostfixVtr()){
-		cout << s << endl;
+Expression readQuery(const string &path, string &T1, string &T2, string &setOp){
+	// Variables definition
+	string condition, tmp;
+
+	// Open query file
+	ifstream input(path);
+	// Validating that file could be opened
+	if(!input.is_open()){
+		cout << "File " << path << " could not be opened!" << endl;
+		exit(0);
 	}
+
+	// Reading the operation
+	input >> T1 >> setOp >> T2 >> tmp;
+	transform(setOp.begin(), setOp.end(), setOp.begin(), ::toupper);
+	// Reading the condition
+	condition = "";
+	while(input >> tmp){
+		condition += tmp + " ";
+	}
+
+	// Closing query file
+	input.close();
+	return Expression(condition);
+}
+
+/** Just the main function */
+int main(int argc, char* argv[]) {
+	// Validating execution
+	if(argc < 4){
+		cout << "Please execute this file with the next format:\n   ./RelCondSetOps T1.data T2.data query.sql\n\n";
+		exit(0);
+	}
+
+	// Setting general flags
+	for(int i = 4; i < argc; i++){
+		if(strcmp(argv[i], "-debug") == 0) Generics::isDebugMode = true;
+	}
+
+	// Variables definition
+	string pathT1 = argv[1], pathT2 = argv[2];
+	string T1, T2, setOp;
+	Expression exp = readQuery("query.sql", T1, T2, setOp);
+	DEBUG_INSTR(exp.displayPostfix());
+	RCSetOperator mySetOperator(new Relation(T1, pathT1, T1 == "T1"), new Relation(T2, pathT2, T2 == "T1"), exp);
+
+	mySetOperator.binaryOperation(setOp);
+
+//	IndexTree tree(T1+".data_PRICE", FLOAT);
+//	tree.indexQuery(EQ, "5");
+
 	return 0;
 }

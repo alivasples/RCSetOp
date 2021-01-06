@@ -17,7 +17,7 @@ OBJS += \
 include/sfp/%.o: ../include/sfp/%.cc
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I/home/alexis/PROJECTS/Eclipse/IndexCreator/include -I/home/alexis/PROJECTS/Eclipse/IndexCreator/src -I/home/alexis/PROJECTS/External/arboretumLast/include -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -I"/home/alivasples/Documentos/PROJECTS/RCSetOp/RCSO-IndexGenerator/src" -I"/home/alivasples/Documentos/PROJECTS/RCSetOp/RCSO-IndexGenerator/include" -I/home/alivasples/Documentos/PROJECTS/RCSetOp/Utils/arboretum/include -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

@@ -25,6 +25,5 @@ C_DEPS :=
 SUBDIRS := \
 include/arboretum \
 include/sfp \
-. \
 src \
 
