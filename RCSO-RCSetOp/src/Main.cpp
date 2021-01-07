@@ -50,21 +50,35 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Setting general flags
+	string index = "";
 	for(int i = 4; i < argc; i++){
 		if(strcmp(argv[i], "-debug") == 0) Generics::isDebugMode = true;
+		if(strcmp(argv[i], "-index") == 0) index = string(argv[++i]);
 	}
+
 
 	// Variables definition
 	string pathT1 = argv[1], pathT2 = argv[2];
 	string T1, T2, setOp;
-	Expression exp = readQuery("query.sql", T1, T2, setOp);
+	Expression exp = readQuery(argv[3], T1, T2, setOp);
 	DEBUG_INSTR(exp.displayPostfix());
-	RCSetOperator mySetOperator(new Relation(T1, pathT1, T1 == "T1"), new Relation(T2, pathT2, T2 == "T1"), exp);
+	RCSetOperator mySetOperator(new Relation(T1, pathT1, T1 == index), new Relation(T2, pathT2, T2 == index), exp);
+	// Setting the path for saving results
+	Generics::savePath = setOp;
 
+    // Start time for execution time
+    clock_t start;
+    double duration;
+    start = clock();
+
+    // Executing our binary operation
 	mySetOperator.binaryOperation(setOp);
 
-//	IndexTree tree(T1+".data_PRICE", FLOAT);
-//	tree.indexQuery(EQ, "5");
+    // Calculating the duration of the program execution
+    duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
+    // Show and save the execution time
+    cout << "\nDuration: "<< duration << " seconds.\n";
+    Generics::saveMessage(duration, "time");
 
 	return 0;
 }

@@ -15,7 +15,7 @@
 using namespace std;
 
 enum DATA_TYPE{INTEGER, FLOAT, STRING};
-const int MAX_TUPLES = 20;
+const int MAX_TUPLES = 4000;
 
 /** ==================================================== Index Tree Class =============================================== */
 class IndexTree{

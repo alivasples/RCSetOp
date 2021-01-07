@@ -26,7 +26,7 @@ class Relation{
 		map<string, int> attsPositions; // dictionary of attributes names to index positions in the Relation and vector
 		vector<Attribute> attributes; // vector of attributes
 		simple_file_parser *sfp; // file reader and parser
-		bool hasIndex; // true if the Relation has index
+		bool isIndexed; // true if the Relation has index
 		vector<IndexTree*> indexes; // vector of indexes for each attribute
 
 		// PRIVATE METHODS
@@ -50,6 +50,9 @@ class Relation{
 		/** Size getter */
 		const int size() const { return nrTuples; }
 
+		/** has index getter */
+		const bool hasIndex() const { return isIndexed; }
+
 		/** Go to next line (tuple) in Relation file */
 		bool nextLine();
 
@@ -59,8 +62,9 @@ class Relation{
 		/** This method returns the index query for a given attribute */
 		bitset<MAX_TUPLES> indexQuery(string attribute, string cmp, string value);
 
-		/** This method receives a bitset to show the tuples that are set to true */
-		void displayTuples(bitset<MAX_TUPLES> ids);
+		/** This method receives a bitset to show the tuples that are set to true
+		 * Also, it returns the number of printed tuples */
+		int displayTuples(bitset<MAX_TUPLES> ids);
 };
 
 // PRIVATE METHODS (HELPERS)
@@ -95,7 +99,7 @@ void Relation::loadAttributes(){
 		// Also, map the attribute name to its index position in the relation or vector of attributes
 		attsPositions[attName] = nrAttributes;
 		// Finally create and add the index tree for the attribute (if we are in index mode)
-		if(hasIndex){
+		if(isIndexed){
 			indexes.push_back(new IndexTree(path+"_"+attName, attType));
 		}
 		// Increment the number of attributes
@@ -117,7 +121,7 @@ Relation::Relation(string name, string path, bool hasIndex){
 	this->name = name;
 	this->path = path;
 	this->nrTuples = Generics::linesInFile(path) - 1;
-	this->hasIndex = hasIndex;
+	this->isIndexed = hasIndex;
 	loadAttributes();
 	// _____ Just writing a trace _______
 	DEBUG_MSG("Relation Instanced with " << nrTuples << " tuples\n\n");
@@ -169,10 +173,13 @@ bitset<MAX_TUPLES> Relation::indexQuery(string attribute, string cmp, string val
 	return indexes[pos]->indexQuery(cmp, value);
 }
 
-/** This method receives a bitset to show the tuples that are set to true */
-void Relation::displayTuples(bitset<MAX_TUPLES> ids){
+/** This method receives a bitset to show the tuples that are set to true
+ *  Also, it returns the number of valid tuples printed
+ *  */
+int Relation::displayTuples(bitset<MAX_TUPLES> ids){
 	// variables definition
 	int currId = 0;
+	int nrValids = 0;
 	string line;
 	// Opening path
 	ifstream input(path);
@@ -180,11 +187,16 @@ void Relation::displayTuples(bitset<MAX_TUPLES> ids){
 	getline(input, line);
 	// Read line by line
 	while(getline(input, line)){
-		if(ids.test(currId)) cout << line << endl;
+		if(ids.test(currId)) {
+			cout << line << endl;
+			nrValids++;
+		}
 		if(line != "") currId ++;
 	}
 	// closing file
 	input.close();
+	// return the number of valid tuples
+	return nrValids;
 }
 
 #endif /* RELATION_H_ */

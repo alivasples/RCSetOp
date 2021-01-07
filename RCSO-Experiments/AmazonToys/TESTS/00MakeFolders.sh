@@ -1,1 +1,11 @@
-for n in {1..100}; do mkdir "TEST "$n; done
+#!/bin/bash
+for n in {1..4}
+do 
+	mkdir "TEST "$n
+	cd "TEST "$n
+	for m in {1..100}
+	do
+		mkdir $m
+	done
+	cd ..
+done

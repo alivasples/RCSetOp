@@ -20,8 +20,8 @@ enum SET_OPERATOR{ SET_UNION, SET_INTERSECTION, SET_DIFFERENCE, SET_SUBSET};
 class RCSetOperator{
 	private:
 		// ATTRIBUTES
-		Relation *T1;
-		Relation *T2;
+		Relation *myT1;
+		Relation *myT2;
 		Expression exp; // query expression
 
 	public:
@@ -36,7 +36,7 @@ class RCSetOperator{
 		bitset<MAX_TUPLES> indexTupleQuery(Relation *T, Relation *tuple);
 
 		/** This method performs the union, intersection or union of two relations */
-		bitset<MAX_TUPLES> binaryOperation(SET_OPERATOR setOP, bool show = true);
+		bitset<MAX_TUPLES> binaryOperation(Relation *T1, Relation *T2, SET_OPERATOR setOP, bool show = true);
 		void binaryOperation(const string &setOP, bool show = true);
 
 		/** This method returns true if T1 is subset of T2, false if not */
@@ -45,8 +45,8 @@ class RCSetOperator{
 
 /** Parameterized Constructor */
 RCSetOperator::RCSetOperator(Relation *T1, Relation *T2, Expression exp){
-	this->T1 = T1;
-	this->T2 = T2;
+	this->myT1 = T1;
+	this->myT2 = T2;
 	this->exp = exp;
 }
 
@@ -148,7 +148,7 @@ bitset<MAX_TUPLES> RCSetOperator::indexTupleQuery(Relation *T, Relation *tuple){
 }
 
 /** This method performs the union, intersection or union of two relations */
-bitset<MAX_TUPLES> RCSetOperator::binaryOperation(SET_OPERATOR setOp, bool show){
+bitset<MAX_TUPLES> RCSetOperator::binaryOperation(Relation *T1, Relation *T2, SET_OPERATOR setOp, bool show){
 	// Variables definition
 	bitset<MAX_TUPLES> resultT1; // all bits are 0's by default
 	bitset<MAX_TUPLES> resultT2; // all bits are 0's by default
@@ -158,32 +158,39 @@ bitset<MAX_TUPLES> RCSetOperator::binaryOperation(SET_OPERATOR setOp, bool show)
 		resultT1.set(); // all to 1's
 	}
 
-	int idTuple = 0;
-	while(T2->nextLine()){
-		// Find the result for the current tuple
-		bitset<MAX_TUPLES> subresult = indexTupleQuery(T1, T2);
-		// Update our result according to the set operator
-		switch(setOp){
-		case SET_INTERSECTION:
-			resultT1 = resultT1 | subresult;
-			break;
-		case SET_DIFFERENCE:
-			resultT1 = resultT1 & ~subresult;
-			break;
-		case SET_UNION:
-			if(subresult.none()) resultT2.set(idTuple);
-			break;
-		default: ERROR_MSG("Operator not supported"); break;
+	if(T1->hasIndex()){
+		int idTuple = 0;
+		while(T2->nextLine()){
+			// Find the result for the current tuple
+			// (Remember that internally T2 keeps a pointer to its current tuple)
+			bitset<MAX_TUPLES> subresult = indexTupleQuery(T1, T2);
+			// Update our result according to the set operator
+			switch(setOp){
+			case SET_INTERSECTION:
+				resultT1 = resultT1 | subresult;
+				break;
+			case SET_DIFFERENCE:
+				resultT1 = resultT1 & ~subresult;
+				break;
+			case SET_UNION:
+				if(subresult.none()) resultT2.set(idTuple);
+				break;
+			default: ERROR_MSG("Operator not supported"); break;
+			}
+			idTuple++;
 		}
-		idTuple++;
 	}
-
+	else{
+		ERROR_MSG("Operation not supported. The left Relation must be the one which contains the index.");
+	}
 	// if show is true then show all valid tuples
 	if(show){
 		DEBUG_MSG("T1: " << resultT1 << endl);
-		T1->displayTuples(resultT1);
+		int sizeResultT1 = T1->displayTuples(resultT1);
 		DEBUG_MSG("T2: " << resultT2 << endl);
-		T2->displayTuples(resultT2);
+		int sizeResultT2 = T2->displayTuples(resultT2);
+		cout << "\nNumber of tuples in result: " << sizeResultT1 + sizeResultT2 << " tuples.\n";
+		Generics::saveMessage(sizeResultT1 + sizeResultT2, "size");
 	}
 
 	// Return the bitset of valid tuples
@@ -193,9 +200,9 @@ bitset<MAX_TUPLES> RCSetOperator::binaryOperation(SET_OPERATOR setOp, bool show)
 
 /** This method performs the union, intersection or union of two relations */
 void RCSetOperator::binaryOperation(const string &setOp, bool show){
-	if(setOp == "UNION") binaryOperation(SET_UNION, show);
-	else if(setOp == "INTERSECT" or setOp == "INTERSECTION") binaryOperation(SET_INTERSECTION, show);
-	else if(setOp == "DIFFERENCE" or setOp == "DIFF" or setOp == "SUBS") binaryOperation(SET_DIFFERENCE, show);
+	if(setOp == "UNION") binaryOperation(myT1, myT2, SET_UNION, show);
+	else if(setOp == "INTERSECT" or setOp == "INTERSECTION") binaryOperation(myT1, myT2, SET_INTERSECTION, show);
+	else if(setOp == "DIFFERENCE" or setOp == "DIFF" or setOp == "MINUS") binaryOperation(myT1, myT2, SET_DIFFERENCE, show);
 	else if(setOp == "SUBSET" or setOp == "BELONG" or setOp == "IN") cout << isSubset() << endl;
 	else ERROR_MSG("Operation " + setOp + " is not recognized");
 }
@@ -203,9 +210,9 @@ void RCSetOperator::binaryOperation(const string &setOp, bool show){
 /** This method returns true if T1 is subset of T2, false if not */
 bool RCSetOperator::isSubset(){
 	// Perform the intersection operation
-	bitset<MAX_TUPLES> intersection = binaryOperation(SET_INTERSECTION, false);
+	bitset<MAX_TUPLES> intersection = binaryOperation(myT1, myT2, SET_INTERSECTION, false);
 	// If any of the tuples of T1 is not on the intersection, then T1 is not subset of T2
-	for(int i = 0; i < T1->size(); i++){
+	for(int i = 0; i < myT1->size(); i++){
 		if(!intersection.test(i)) return false;
 	}
 	// If all tuples of T1 were intersected, then it is a subset

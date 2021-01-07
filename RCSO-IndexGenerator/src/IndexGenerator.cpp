@@ -37,6 +37,8 @@ void IndexGenerator::createIndex(string filename, int attributeIndex, string ind
     attributeName = sfp.get_token((attributeIndex * 7)); // Example: ATT2
     attributeType = sfp.get_token((attributeIndex * 7) + 2); // Example: float
     attributeSize = sfp.get_token_int((attributeIndex * 7) + 4); // Example: 2 (float coords)
+    // convert attribute name to caps
+    transform(attributeName.begin(), attributeName.end(), attributeName.begin(), ::toupper);
     // Just showing a message
     cout<<"Creating Index for "<<attributeName<<" of tpye "<<attributeType<<" and size "<<attributeSize<<endl;
 

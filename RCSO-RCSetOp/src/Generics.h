@@ -21,8 +21,10 @@ class Generics{
 public:
 	// STATIC ATTRIBUTES
 	static bool isDebugMode;
+	static string savePath;
 
 	// STATIC METHODS
+	/** Read a file and returns the number of non-empty lines */
 	static int linesInFile(const string &path){
 		int nrLines = 0;
 		string line;
@@ -37,6 +39,16 @@ public:
 		input.close();
 		return nrLines;
 	}
+
+	/** Save a message in a file */
+	template <class DType>
+	static void saveMessage(const DType & message, const string &extension = ""){
+		std::ofstream ofs;
+		ofs.open (savePath+"."+extension, std::ofstream::out | std::ofstream::app);
+		ofs << message << endl;
+		ofs.close();
+	}
+
 };
 
 
