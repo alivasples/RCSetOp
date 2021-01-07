@@ -1,5 +1,5 @@
 category(string,116);product(string,232);units(float,1);price(float,1);
-"Games  Trivia  Quiz Games"; "Anthonys Game"; 2; 4.9; 
+"Games  Trivia  Quiz Games"; "Anthonys Game"; 2; 4.99; 
 "Figures  Playsets  Pirates"; "Slugterra Dr. Blakk and Thundarr"; 4; 9.99; 
 "Characters  Brands  Disney  Toys"; "Mickey Mouse Clubhouse Party  Mickey Mouse Happy Birthday Banner"; 5; 2.0; 
 "Figures  Playsets  Pirates"; "ScoobyDoo Captain Scooby and the Pirate Fort Mega Playset  Glow in the dark"; 4; 28.75; 
@@ -131,7 +131,7 @@ category(string,116);product(string,232);units(float,1);price(float,1);
 "Dolls  Accessories  Soft Dolls"; "Manhattan Toy Groovy Girls Princess Isabella Doll"; 5; 14.44; 
 "Figures  Playsets  Science Fiction  Fantasy"; "Hot Toys Berserker Predator 35 cm Figure 16 scale"; 8; 213.51; 
 "Baby  Toddler Toys  Sorting, Stacking  Plugging Toys"; "Melissa and Doug Stacking Cars"; 9; 9.16; 
-"Arts  Crafts  Paper  Stickers"; "Ben 10 A4 Colouring and Sticker Set"; 3; 2.9; 
+"Arts  Crafts  Paper  Stickers"; "Ben 10 A4 Colouring and Sticker Set"; 3; 2.99; 
 "Figures  Playsets  Knights  Castles"; "Schleich Dragon Knight Spy Action Figure"; 7; 37.15; 
 "Figures  Playsets  Knights  Castles"; "Playmobil 4775 Knights Take Along Tower"; 10; 16.77; 
 "Jigsaws  Puzzles  Jigsaws"; "Paul Lamond Flowers 3D Puzzle Vase 160 Pieces"; 3; 12.99; 

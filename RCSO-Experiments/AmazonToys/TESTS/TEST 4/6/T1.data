@@ -55,7 +55,7 @@ category(string,116);product(string,232);units(float,1);price(float,1);
 "Characters  Brands  Disney  Toys"; "Guardians of the Galaxy Milano Starship Playset"; 30; 14.32; 
 "Characters  Brands  Star Wars  Toys"; "LEGO Star Wars Mos Espa Podrace 7171"; 2; 549.85; 
 "Musical Toy Instruments  Guitars  Strings"; "Janod Confetti Ukulele"; 7; 28.8; 
-"Characters  Brands  Ravensburger  Games"; "Star Wars Clone Wars Card Game"; 1; 8.9; 
+"Characters  Brands  Ravensburger  Games"; "Star Wars Clone Wars Card Game"; 1; 8.99; 
 "DieCast  Toy Vehicles  Toy Trains  Accessories  Toy Trains  Sets"; "Thomas  Friends TakenPlay Diesel 10 Engine"; 6; 7.99; 
 "Figures  Playsets  Cowboys  Indians"; "Necron Warriors"; 9; 20.26; 
 "DieCast  Toy Vehicles  Toy Vehicles  Accessories  Scaled Models"; "Weise Toys Unimog 406 U84 1971  1989 Truck with Closed Cabin"; 4; 68.8; 
