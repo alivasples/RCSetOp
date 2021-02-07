@@ -16,4 +16,4 @@ printf "==============================================================\n"
 
 printf "\n               PERFORMING RELATIONAL SET OPERATION\n"
 printf "==============================================================\n"
-./$setOperator T1.data T2.data query.sql
+./$setOperator T1.data T2.data query.sql -index T1

@@ -1,5 +1,5 @@
 #!/bin/bash
-for n in {1..4}
+for n in {1..5}
 do 
 	mkdir "TEST "$n
 	cd "TEST "$n

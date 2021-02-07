@@ -1,0 +1,2 @@
+CATEGORY(string,50); PRODUCT(string,50); UNITS(float,1); PRICE(float,1)
+"Card Games"; "UNO Cards"; 1; 2

@@ -39,6 +39,10 @@ class RCSetOperator{
 		bitset<MAX_TUPLES> binaryOperation(Relation *T1, Relation *T2, SET_OPERATOR setOP, bool show = true);
 		void binaryOperation(const string &setOP, bool show = true);
 
+		/**This method returns true if the first tuple (should be the only tuple) in the right relation
+		 * is member of the left relation, false if not */
+		bool isMember(Relation *T1, Relation *T2);
+
 		/** This method returns true if T1 is subset of T2, false if not */
 		bool isSubset();
 };
@@ -198,13 +202,40 @@ bitset<MAX_TUPLES> RCSetOperator::binaryOperation(Relation *T1, Relation *T2, SE
 }
 
 
+
 /** This method performs the union, intersection or union of two relations */
 void RCSetOperator::binaryOperation(const string &setOp, bool show){
 	if(setOp == "UNION") binaryOperation(myT1, myT2, SET_UNION, show);
 	else if(setOp == "INTERSECT" or setOp == "INTERSECTION") binaryOperation(myT1, myT2, SET_INTERSECTION, show);
 	else if(setOp == "DIFFERENCE" or setOp == "DIFF" or setOp == "MINUS") binaryOperation(myT1, myT2, SET_DIFFERENCE, show);
+	else if(setOp == "CONTAINS" or setOp == "INCLUDES") cout << isMember(myT1, myT2) << endl;
 	else if(setOp == "SUBSET" or setOp == "BELONG" or setOp == "IN") cout << isSubset() << endl;
 	else ERROR_MSG("Operation " + setOp + " is not recognized");
+}
+
+/**This method returns true if the first tuple (should be the only tuple) in the right relation
+ * is member of the left relation, false if not */
+bool RCSetOperator::isMember(Relation *T1, Relation *T2){
+	// Variables definition
+	bitset<MAX_TUPLES> result;
+
+	// Only possible if T1 has index
+	if(T1->hasIndex()){
+		int idTuple = 0;
+		// Read first tuple
+		T2->nextLine();
+		// Find the result for the current tuple
+		result = indexTupleQuery(T1, T2);
+	}
+	else{
+		ERROR_MSG("Operation not supported. The left Relation must be the one which contains the index.");
+	}
+	// If any of the tuples of T1 satisfies the condition, then the first tuple of T2 is conditional member of T1
+	for(int i = 0; i < myT1->size(); i++){
+		if(result.test(i)) return true;
+	}
+	// If none tuple from T1 satisfies the condition with the given tuple, that tuple is not conditional member of T1
+	return false;
 }
 
 /** This method returns true if T1 is subset of T2, false if not */
