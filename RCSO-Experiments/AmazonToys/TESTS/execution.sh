@@ -6,6 +6,7 @@ setOperator="../../../../../RCSO-RCSetOp/Debug/RelCondSetOps"
 queryIntersect="../../queryIntersect.sql"
 queryMinus="../../queryMinus.sql"
 queryMember="../../queryMembership.sql"
+queryMemberEach="../../queryMemberEach.sql"
 querySubset="../../querySubset.sql"
 
 for n in {1..5}
@@ -40,6 +41,9 @@ do
 			printf "\n               PERFORMING REL COND SUBSET \n"
 			printf "==============================================================\n"
 			./$setOperator T1.data T2.data $querySubset -index T1
+			printf "\n               PERFORMING REL COND MEMBERSHIP \n"
+			printf "==============================================================\n"
+			./$setOperator T1.data T2.data $queryMemberEach -index T1
 			printf "\n               PERFORMING REL COND MEMBERSHIP \n"
 			printf "==============================================================\n"
 			./$setOperator T1.data ATUPLE.data $queryMember -index T1

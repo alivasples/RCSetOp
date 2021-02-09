@@ -66,19 +66,9 @@ int main(int argc, char* argv[]) {
 	// Setting the path for saving results
 	Generics::savePath = setOp;
 
-    // Start time for execution time
-    clock_t start;
-    double duration;
-    start = clock();
-
     // Executing our binary operation
 	mySetOperator.binaryOperation(setOp);
 
-    // Calculating the duration of the program execution
-    duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
-    // Show and save the execution time
-    cout << "\nDuration: "<< duration << " seconds.\n";
-    Generics::saveMessage(duration, "time");
 
 	return 0;
 }

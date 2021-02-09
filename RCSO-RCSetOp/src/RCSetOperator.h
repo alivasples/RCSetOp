@@ -39,12 +39,15 @@ class RCSetOperator{
 		bitset<MAX_TUPLES> binaryOperation(Relation *T1, Relation *T2, SET_OPERATOR setOP, bool show = true);
 		void binaryOperation(const string &setOP, bool show = true);
 
+		/** This method returns true if T1 is subset of T2, false if not */
+		bool isSubset();
+
 		/**This method returns true if the first tuple (should be the only tuple) in the right relation
 		 * is member of the left relation, false if not */
 		bool isMember(Relation *T1, Relation *T2);
 
-		/** This method returns true if T1 is subset of T2, false if not */
-		bool isSubset();
+		/** This method tests for each tuple of T2 if is conditional member of T1 */
+		void showAllMembers(Relation *T1, Relation *T2);
 };
 
 /** Parameterized Constructor */
@@ -205,16 +208,49 @@ bitset<MAX_TUPLES> RCSetOperator::binaryOperation(Relation *T1, Relation *T2, SE
 
 /** This method performs the union, intersection or union of two relations */
 void RCSetOperator::binaryOperation(const string &setOp, bool show){
+
+    // Start time for execution time
+    clock_t start;
+    double duration;
+    start = clock();
+
 	if(setOp == "UNION") binaryOperation(myT1, myT2, SET_UNION, show);
 	else if(setOp == "INTERSECT" or setOp == "INTERSECTION") binaryOperation(myT1, myT2, SET_INTERSECTION, show);
 	else if(setOp == "DIFFERENCE" or setOp == "DIFF" or setOp == "MINUS") binaryOperation(myT1, myT2, SET_DIFFERENCE, show);
-	else if(setOp == "CONTAINS" or setOp == "INCLUDES") cout << isMember(myT1, myT2) << endl;
 	else if(setOp == "SUBSET" or setOp == "BELONG" or setOp == "IN") cout << isSubset() << endl;
+	else if(setOp == "CONTAINSEACH" or setOp == "INCLUDESEACH") showAllMembers(myT1, myT2);
 	else ERROR_MSG("Operation " + setOp + " is not recognized");
+
+	// Calculating the duration of the program execution
+	duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
+	// Show and save the execution time
+	if(setOp == "CONTAINSEACH" or setOp == "INCLUDESEACH"){
+		cout << "\nDuration AVG per member: "<< duration/myT2->size() << " seconds.\n";
+		cout << "\nTotal Duration: "<< duration << " seconds.\n";
+		Generics::saveMessage(duration/myT2->size(), "time");
+	}
+	else{
+		cout << "\nDuration: "<< duration << " seconds.\n";
+		Generics::saveMessage(duration, "time");
+	}
 }
 
-/**This method returns true if the first tuple (should be the only tuple) in the right relation
- * is member of the left relation, false if not */
+
+/** This method returns true if T1 is subset of T2, false if not */
+bool RCSetOperator::isSubset(){
+	// Perform the intersection operation
+	bitset<MAX_TUPLES> intersection = binaryOperation(myT1, myT2, SET_INTERSECTION, false);
+	// If any of the tuples of T1 is not on the intersection, then T1 is not subset of T2
+	for(int i = 0; i < myT1->size(); i++){
+		if(!intersection.test(i)) return false;
+	}
+	// If all tuples of T1 were intersected, then it is a subset
+	return true;
+}
+
+
+/** This method returns true if the first tuple (should be the only tuple) in the right relation
+  * is member of the left relation, false if not */
 bool RCSetOperator::isMember(Relation *T1, Relation *T2){
 	// Variables definition
 	bitset<MAX_TUPLES> result;
@@ -238,16 +274,13 @@ bool RCSetOperator::isMember(Relation *T1, Relation *T2){
 	return false;
 }
 
-/** This method returns true if T1 is subset of T2, false if not */
-bool RCSetOperator::isSubset(){
-	// Perform the intersection operation
-	bitset<MAX_TUPLES> intersection = binaryOperation(myT1, myT2, SET_INTERSECTION, false);
-	// If any of the tuples of T1 is not on the intersection, then T1 is not subset of T2
-	for(int i = 0; i < myT1->size(); i++){
-		if(!intersection.test(i)) return false;
+
+/** This method tests for each tuple of T2 if is conditional member of T1 */
+void RCSetOperator::showAllMembers(Relation *T1, Relation *T2){
+	for (int i = 0; i < T2->size(); i++){
+		cout << isMember(T1, T2);
 	}
-	// If all tuples of T1 were intersected, then it is a subset
-	return true;
 }
+
 
 #endif /* RCSETOPERATOR_H_ */
