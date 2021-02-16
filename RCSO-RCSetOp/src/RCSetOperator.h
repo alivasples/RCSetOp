@@ -218,6 +218,7 @@ void RCSetOperator::binaryOperation(const string &setOp, bool show){
 	else if(setOp == "INTERSECT" or setOp == "INTERSECTION") binaryOperation(myT1, myT2, SET_INTERSECTION, show);
 	else if(setOp == "DIFFERENCE" or setOp == "DIFF" or setOp == "MINUS") binaryOperation(myT1, myT2, SET_DIFFERENCE, show);
 	else if(setOp == "SUBSET" or setOp == "BELONG" or setOp == "IN") cout << isSubset() << endl;
+	else if(setOp == "CONTAINS" or setOp == "INCLUDES") isMember(myT1, myT2);
 	else if(setOp == "CONTAINSEACH" or setOp == "INCLUDESEACH") showAllMembers(myT1, myT2);
 	else ERROR_MSG("Operation " + setOp + " is not recognized");
 

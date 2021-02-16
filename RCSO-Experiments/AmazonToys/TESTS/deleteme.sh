@@ -11,7 +11,7 @@ querySubset="../../querySubset.sql"
 for n in {5..5}
 do 
 	cd "TEST "$n
-	for m in {1..100}
+	for m in {0..0}
 	do
 		cd $m
 		printf "\n********************** TEST "$n"/"$m"***********************\n"
@@ -28,7 +28,7 @@ do
 		printf "==============================================================\n"
 		./$indexCreator T1.data 3 simple
 		
-		for time in {1..10}
+		for time in {1..1}
 		do
 			printf "\n********************** TEST "$n"/"$m"/ time: "$time"***********************\n"
 			printf "\n               PERFORMING REL COND INTERSECTION \n"
