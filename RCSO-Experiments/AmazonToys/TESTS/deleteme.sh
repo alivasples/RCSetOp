@@ -27,6 +27,18 @@ do
 		printf "\n                  CREATING INDEX FOR T1[3]\n"
 		printf "==============================================================\n"
 		./$indexCreator T1.data 3 simple
+		printf "\n                  CREATING INDEX FOR T2[0]\n"
+		printf "==============================================================\n"
+		./$indexCreator T2.data 0 simple
+		printf "\n                  CREATING INDEX FOR T2[1]\n"
+		printf "==============================================================\n"
+		./$indexCreator T2.data 1 simple
+		printf "\n                  CREATING INDEX FOR T2[2]\n"
+		printf "==============================================================\n"
+		./$indexCreator T2.data 2 simple
+		printf "\n                  CREATING INDEX FOR T2[3]\n"
+		printf "==============================================================\n"
+		./$indexCreator T2.data 3 simple
 		
 		for time in {1..1}
 		do
@@ -42,7 +54,7 @@ do
 			./$setOperator T1.data T2.data $querySubset -index T1
 			printf "\n               PERFORMING REL COND MEMBERSHIP \n"
 			printf "==============================================================\n"
-			./$setOperator T1.data T2.data $queryMemberEach -index T1
+			./$setOperator T2.data T1.data $queryMemberEach -index T1
 				
 		done
 		cd .. # TEST n

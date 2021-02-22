@@ -187,6 +187,21 @@ bitset<MAX_TUPLES> RCSetOperator::binaryOperation(Relation *T1, Relation *T2, SE
 			idTuple++;
 		}
 	}
+	else if(T2->hasIndex()){
+		for(int i = 0; i < T1->size(); i++){
+			if(isMember(T2, T1)){
+				switch(setOp){
+					case SET_INTERSECTION:
+						resultT1.set(i);
+						break;
+					case SET_DIFFERENCE:
+						resultT1.reset(i);
+						break;
+					default: ERROR_MSG("Operator not supported"); break;
+				}
+			}
+		}
+	}
 	else{
 		ERROR_MSG("Operation not supported. The left Relation must be the one which contains the index.");
 	}
@@ -218,6 +233,8 @@ void RCSetOperator::binaryOperation(const string &setOp, bool show){
 	else if(setOp == "INTERSECT" or setOp == "INTERSECTION") binaryOperation(myT1, myT2, SET_INTERSECTION, show);
 	else if(setOp == "DIFFERENCE" or setOp == "DIFF" or setOp == "MINUS") binaryOperation(myT1, myT2, SET_DIFFERENCE, show);
 	else if(setOp == "SUBSET" or setOp == "BELONG" or setOp == "IN") cout << isSubset() << endl;
+	else if(setOp == "MEMBER" or setOp == "ISMEMBER") isMember(myT2, myT1);
+	else if(setOp == "MEMBEREACH" or setOp == "ISMEMBEREACH") showAllMembers(myT2, myT1);
 	else if(setOp == "CONTAINS" or setOp == "INCLUDES") isMember(myT1, myT2);
 	else if(setOp == "CONTAINSEACH" or setOp == "INCLUDESEACH") showAllMembers(myT1, myT2);
 	else ERROR_MSG("Operation " + setOp + " is not recognized");
@@ -229,6 +246,11 @@ void RCSetOperator::binaryOperation(const string &setOp, bool show){
 		cout << "\nDuration AVG per member: "<< duration/myT2->size() << " seconds.\n";
 		cout << "\nTotal Duration: "<< duration << " seconds.\n";
 		Generics::saveMessage(duration/myT2->size(), "time");
+	}
+	else if(setOp == "MEMBEREACH" or setOp == "ISMEMBEREACH"){
+		cout << "\nDuration AVG per member: "<< duration/myT1->size() << " seconds.\n";
+		cout << "\nTotal Duration: "<< duration << " seconds.\n";
+		Generics::saveMessage(duration/myT1->size(), "time");
 	}
 	else{
 		cout << "\nDuration: "<< duration << " seconds.\n";
@@ -268,7 +290,7 @@ bool RCSetOperator::isMember(Relation *T1, Relation *T2){
 		ERROR_MSG("Operation not supported. The left Relation must be the one which contains the index.");
 	}
 	// If any of the tuples of T1 satisfies the condition, then the first tuple of T2 is conditional member of T1
-	for(int i = 0; i < myT1->size(); i++){
+	for(int i = 0; i < T1->size(); i++){
 		if(result.test(i)) return true;
 	}
 	// If none tuple from T1 satisfies the condition with the given tuple, that tuple is not conditional member of T1

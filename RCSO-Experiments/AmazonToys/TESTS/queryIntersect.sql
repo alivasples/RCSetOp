@@ -4,5 +4,5 @@ T1.Product  = T2.Product  AND
 (
 	T1.Units <= T2.Units AND  
 	NOT (T1.Price < T2.Price) OR 
-	T1.Price >= T2.Price * 2
+	T1.Price / 2 >= T2.Price
 )
